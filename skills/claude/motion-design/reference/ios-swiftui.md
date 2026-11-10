@@ -66,7 +66,7 @@ withAnimation(Motion.Spring.standard) {
 ```swift
 // Implicit: attached to a view, runs when the watched value changes.
 // For a single view reacting to its own state.
-RoundedRectangle(cornerRadius: Radius.card)
+RoundedRectangle(cornerRadius: Radius.lg)
     .scaleEffect(isActive ? 1.05 : 1.0)
     .animation(Motion.Spring.snappy, value: isActive)
 

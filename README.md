@@ -26,6 +26,7 @@ skills/portable/                              the same skills for other agents (
 skills/bundled/                               one self-contained file per topic (generated)
 scripts/build.mjs                             builds portable/, bundled/ and AGENTS.md
 scripts/check.mjs                             lint, plus a check that the generated files are current
+checks/                                       compiles every code sample, per language
 ```
 
 Each skill directory also holds `reference/*.md` files for anything too deep to keep in the top-level `SKILL.md`; API detail, per-style implementations, per-platform code (Claude reads those only when the task actually needs them).
@@ -125,6 +126,28 @@ node scripts/check.mjs    # lint, and fail if anything generated is stale
 ```
 
 Wording that has to differ for other agents goes in `scripts/portable.json`, not in the output. CI runs the check on every push.
+
+---
+
+## Checks
+
+Every code sample in the skills goes through a real compiler. The checks read the samples straight out of the markdown each run, so there's no second copy to drift.
+
+```
+checks/swift/        every Swift sample, iOS and macOS SDKs          needs Xcode 27.2
+checks/kotlin/       every Compose sample as an Android library      needs a JDK and the Android SDK
+checks/rust/         every Rust sample through the skill's CI gates  needs rustup, Postgres, three cargo tools
+checks/typescript/   every TS and TSX sample under strict tsc        needs Node
+checks/javascript/   GSAP, Lenis and Three.js samples, motion tokens needs Node
+checks/color/        palette, semantic mappings, contrast figures    needs Node
+checks/triggers/     which skill loads for a given request
+```
+
+Each one is `checks/<name>/run.sh`, and `run.sh --self-test` proves it fails on a broken sample. Each folder's README says what it needs installed. Tokens come from the skill that owns them, so a sample that uses a token nobody defines fails.
+
+CI runs them on every push that touches a skill. The Rust check also runs weekly, because `cargo audit` and `cargo deny` read the live advisory database and can go red without anyone touching the repo.
+
+When a check fails, fix the skill, not the check.
 
 ---
 

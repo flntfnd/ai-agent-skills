@@ -1,0 +1,21 @@
+name: samples (swift)
+
+on:
+  push:
+    branches: [main]
+    paths: ['skills/claude/**', 'checks/swift/**', '.github/workflows/samples-swift.yml']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: xcode-27
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v4
+      - run: checks/swift/run.sh
+      - run: checks/swift/run.sh --self-test

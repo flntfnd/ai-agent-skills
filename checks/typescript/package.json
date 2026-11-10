@@ -1,0 +1,31 @@
+{
+    "name": "skill-typescript-check",
+    "private": true,
+    "type": "module",
+    "description": "Type-checks every TypeScript and TSX sample in the skills. Versions match the skills' snapshots.",
+    "engines": { "node": ">=22.12" },
+    "devDependencies": {
+        "@opentelemetry/api": "1.10.0",
+        "@supabase/ssr": "0.12.7",
+        "@supabase/supabase-js": "2.119.0",
+        "@types/express": "5.0.6",
+        "@types/node": "26.6.6",
+        "@types/pg": "8.23.1",
+        "@types/react": "19.3.0",
+        "@types/react-dom": "19.3.0",
+        "astro": "7.4.9",
+        "bullmq": "6.7.3",
+        "express": "5.3.0",
+        "ioredis": "6.0.0",
+        "jose": "6.2.17",
+        "next": "16.4.6",
+        "pg": "8.23.1",
+        "pino": "10.4.0",
+        "railway": "3.16.0",
+        "react": "19.3.1",
+        "react-dom": "19.3.1",
+        "temporal-polyfill": "1.0.8",
+        "typescript": "7.0.2",
+        "zod": "4.6.7"
+    }
+}

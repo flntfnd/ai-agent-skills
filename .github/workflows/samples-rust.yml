@@ -1,0 +1,42 @@
+name: samples (rust)
+
+on:
+  push:
+    branches: [main]
+    paths: ['skills/claude/rust-conventions/**', 'checks/rust/**', '.github/workflows/samples-rust.yml']
+  pull_request:
+  schedule:
+    - cron: '0 9 * * 1' # weekly, so a new advisory or a stale lockfile gets noticed
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-nextest,cargo-audit,cargo-deny
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            checks/rust/.build/ws/target
+          key: rust-${{ runner.os }}-${{ hashFiles('checks/rust/Cargo.lock') }}
+      - run: checks/rust/run.sh
+      - run: checks/rust/run.sh --self-test

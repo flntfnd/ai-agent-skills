@@ -1,0 +1,14 @@
+# Samples that use iOS-only API, so they're expected to fail on the macOS SDK.
+# One sample id per line: <skill>/<file>#<fence index, from 0>. A reason after the id is fine.
+# run.sh fails if a sample fails on macOS and isn't here, and if a sample here passes.
+
+apple-platform/custom-rendering#4            # UIViewRepresentable wrapping MTKView
+apple-platform/navigation-components#0       # tabBarMinimizeBehavior(.onScrollDown)
+apple-platform/navigation-components#6       # ToolbarOverflowMenu, .topBarPinnedTrailing
+apple-platform/navigation-components#7       # toolbarMinimizationBehavior for .navigationBar
+apple-platform/navigation-components#11      # .navigationTransition(.crossFade)
+apple-platform/navigation-components#13      # .navigationTransition(.zoom)
+motion-design/ios-swiftui#7                  # .navigationTransition(.zoom)
+motion-design/ios-swiftui#8                  # .navigationTransition(.crossFade)
+visual-styles/bento-grid#0                   # .navigationTransition(.zoom)
+visual-styles/calm-anti-distraction#0        # toolbar visibility for .navigationBar

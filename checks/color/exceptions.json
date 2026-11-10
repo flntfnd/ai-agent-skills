@@ -1,0 +1,109 @@
+{
+  "literals": [
+    {
+      "file": "skills/claude/color-system/reference/implementation.md",
+      "name": "swiss-red",
+      "value": "oklch(56.71% 0.24 29.54)",
+      "reason": "The Display P3 example raises chroma on purpose to show a wide-gamut override. It isn't the palette value."
+    }
+  ],
+  "contrast": {
+    "defaults": {
+      "text": {
+        "min": 4.5,
+        "why": "Text. 4.5:1 on every background."
+      },
+      "status": {
+        "min": 4.5,
+        "why": "Works as text and as a mark. 4.5:1 on every background."
+      },
+      "border": {
+        "min": 3,
+        "why": "A boundary that identifies a control. 3:1."
+      },
+      "accent": {
+        "min": 3,
+        "why": "Decorative mark. 3:1."
+      },
+      "interactive": {
+        "min": 3,
+        "why": "A fill. 3:1 against every background it sits on."
+      }
+    },
+    "label": {
+      "token": "text/inverse",
+      "min": 4.5,
+      "why": "The label on every interactive/primary state."
+    },
+    "exempt": [
+      {
+        "token": "text/disabled",
+        "reason": "Disabled text has no contrast requirement.",
+        "evidence": "Disabled controls and decorative elements have no requirement."
+      },
+      {
+        "token": "interactive/primary-disabled",
+        "reason": "Disabled controls have no contrast requirement.",
+        "evidence": "Disabled controls and decorative elements have no requirement."
+      },
+      {
+        "token": "border/default",
+        "reason": "Decorative border.",
+        "evidence": "**Default borders are decorative.**"
+      },
+      {
+        "token": "border/subtle",
+        "reason": "Decorative border, lighter than border/default.",
+        "evidence": "**Default borders are decorative.**"
+      },
+      {
+        "token": "accent/secondary",
+        "reason": "Yellow. A fill or large shape with swiss-ink on top, never a mark on a light surface.",
+        "evidence": "`accent/secondary` is yellow, so it's a fill or a large shape"
+      },
+      {
+        "token": "text/inverse",
+        "reason": "Not set on backgrounds. Checked as the label on each interactive fill instead.",
+        "evidence": "`text/inverse` is the label on every `interactive/primary` state"
+      }
+    ],
+    "overrides": [
+      {
+        "token": "status/error",
+        "mode": "dark",
+        "on": "background/elevated",
+        "min": 3,
+        "reason": "Marks and large text only on dark elevated surfaces.",
+        "evidence": "on dark `background/elevated`, error, success and info are marks or large text only"
+      },
+      {
+        "token": "status/success",
+        "mode": "dark",
+        "on": "background/elevated",
+        "min": 3,
+        "reason": "Marks and large text only on dark elevated surfaces.",
+        "evidence": "on dark `background/elevated`, error, success and info are marks or large text only"
+      },
+      {
+        "token": "status/info",
+        "mode": "dark",
+        "on": "background/elevated",
+        "min": 3,
+        "reason": "Marks and large text only on dark elevated surfaces.",
+        "evidence": "on dark `background/elevated`, error, success and info are marks or large text only"
+      }
+    ]
+  },
+  "primitiveReferences": [
+    {
+      "file": "skills/claude/visual-styles/reference/neo-minimalism.md",
+      "name": "neutral",
+      "reason": "A style placeholder for whatever neutral the project picks. Not a palette name."
+    },
+    {
+      "file": "skills/claude/visual-styles/reference/neo-brutalism.md",
+      "name": "brand",
+      "reason": "A style placeholder for the project's brand color. Not a palette name."
+    }
+  ]
+}

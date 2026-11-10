@@ -105,7 +105,7 @@ accent/secondary                   swiss-yellow      swiss-yellow
 - `interactive/primary` can be `swiss-blue` instead, per brand.
 - `text/inverse` is the label on every `interactive/primary` state, in both modes.
 - Light states get darker. Dark states get lighter. Both step the same way through default, hover, pressed.
-- `status/*` works as text and as a mark in both modes. One exception: on dark `background/elevated`, error and success are marks or large text only.
+- `status/*` works as text and as a mark in both modes. One exception: on dark `background/elevated`, error, success and info are marks or large text only.
 - Dark `status/info` is blue, not cyan. Info is blue in light mode and a role keeps its hue across modes. Cyan stays an accent.
 - `accent/*` is decorative. It's never the only thing carrying meaning and never an interactive state. `accent/secondary` is yellow, so it's a fill or a large shape with `swiss-ink` on top, never text on a light surface.
 - `swiss-yellow` is still the warning fill in light mode when the warning is a banner or badge: yellow background, `swiss-ink` text. `status/warning` is for the mark and the text.
@@ -203,7 +203,7 @@ The rules that come out of the numbers:
 - **Yellow is a fill, never text or a mark on a light surface.** Background with `swiss-ink` on top, or text on dark surfaces only. On light surfaces the warning mark and text are `swiss-ochre`.
 - **Red as text has no margin on light neutrals.** `swiss-red` passes for body text on `warm-100` and `warm-200` and fails on `warm-300`. That's why `status/error` is `swiss-red-deep`. On near-black use `swiss-red-warm` or `accent-red-light`.
 - **`swiss-red-warm` isn't a state color.** It drops a `warm-100` label to 4.14:1.
-- **Dark elevated surfaces are the tight spot.** `accent-red-light` and `accent-green-light` are 3.68:1 and 3.70:1 on `cool-800`. Marks and large text only there. Set the message in `text/primary`.
+- **Dark elevated surfaces are the tight spot.** `accent-red-light`, `accent-green-light` and `accent-blue-light` are 3.68:1, 3.70:1 and 4.17:1 on `cool-800`. Marks and large text only there. Set the message in `text/primary`.
 - **Default borders are decorative.** Where a border is the only thing identifying a control, like an input field, use `border/strong`.
 - **Color is never the only signal.** Error, warning, and success get an icon or text alongside the color.
 

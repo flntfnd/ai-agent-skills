@@ -1,0 +1,26 @@
+name: samples (color, javascript, typescript)
+
+on:
+  push:
+    branches: [main]
+    paths: ['skills/claude/**', 'checks/color/**', 'checks/javascript/**', 'checks/typescript/**', '.github/workflows/samples-node.yml']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        check: [color, javascript, typescript]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: checks/${{ matrix.check }}/run.sh
+      - run: checks/${{ matrix.check }}/run.sh --self-test

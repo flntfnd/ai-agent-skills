@@ -1,0 +1,45 @@
+# The first block mirrors the Version Snapshot in skills/claude/android-platform/SKILL.md.
+# check_versions.py fails the run if the two drift apart. Bump both together.
+[versions]
+compileSdk = "37"
+kotlin = "2.4.21"
+composeBom = "2026.09.00"
+material3 = "1.5.0-rc01"
+navigation3 = "1.2.1"
+navigationevent = "1.2.0"
+activity = "1.13.0"
+window = "1.5.1"
+graphicsShapes = "1.1.0"
+
+# Build tooling and helpers the snapshot doesn't name.
+agp = "9.5.1"
+minSdk = "26"
+serialization = "1.12.0"
+lifecycleNavigation3 = "2.11.0"
+
+[libraries]
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
+material3-navigation-suite = { module = "androidx.compose.material3:material3-adaptive-navigation-suite", version.ref = "material3" }
+adaptive = { module = "androidx.compose.material3.adaptive:adaptive" }
+adaptive-layout = { module = "androidx.compose.material3.adaptive:adaptive-layout" }
+adaptive-navigation = { module = "androidx.compose.material3.adaptive:adaptive-navigation" }
+adaptive-navigation3 = { module = "androidx.compose.material3.adaptive:adaptive-navigation3" }
+material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-ui-test = { module = "androidx.compose.ui:ui-test" }
+compose-foundation = { module = "androidx.compose.foundation:foundation" }
+compose-animation = { module = "androidx.compose.animation:animation" }
+activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
+navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "navigation3" }
+navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "navigation3" }
+navigationevent-compose = { module = "androidx.navigationevent:navigationevent-compose", version.ref = "navigationevent" }
+graphics-shapes = { module = "androidx.graphics:graphics-shapes", version.ref = "graphicsShapes" }
+window = { module = "androidx.window:window", version.ref = "window" }
+serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "serialization" }
+lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleNavigation3" }
+
+[plugins]
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

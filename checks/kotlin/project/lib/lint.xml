@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- Harness artefact. The fling/decay fragment in motion-design/reference/android-compose.md
+         belongs in a drag-end callback. The harness has to put it in a composable body to compile it. -->
+    <issue id="CoroutineCreationDuringComposition">
+        <ignore regexp="motion_design__android_compose__4" />
+    </issue>
+    <!-- Versions are pinned to android-platform's Version Snapshot on purpose. -->
+    <issue id="GradleDependency" severity="ignore" />
+    <issue id="NewerVersionAvailable" severity="ignore" />
+    <issue id="AndroidGradlePluginVersion" severity="ignore" />
+    <!-- Placeholder resources exist only so R resolves. -->
+    <issue id="UnusedResources" severity="ignore" />
+</lint>
