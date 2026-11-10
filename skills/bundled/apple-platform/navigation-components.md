@@ -348,11 +348,31 @@ VoiceOver announces the options as tabs, and on macOS the control looks differen
 
 ### Foldable Layout
 
-iPhone Duo folds. Its layout APIs need the iOS 27.1 SDK.
+iPhone Duo folds. Its layout APIs are 27.1, on every platform. With a 27.0 deployment target, gate them with `if #available(iOS 27.1, *)`.
 
-- `ArrangementView` lays out two related panes (player and controls, list and detail). They stack on a flat display and separate across the fold. Pick `.split` or `.overlay` with `.arrangementViewStyle(_:)`.
-- `ReservedRegion` keeps content off the hinge and the camera.
-- `onHingeChange` reports the hinge angle and whether the device is closed, partly open, or fully open.
+```swift
+struct PlayerScreen: View {
+    @State private var isTabletop = false
+
+    var body: some View {
+        ArrangementView {
+            PlayerControls()
+        } secondary: {
+            VideoSurface()
+        }
+        .arrangementViewStyle(.overlay)
+        .onHingeChange { _, new in
+            withAnimation(Motion.Spring.standard) {
+                isTabletop = new.hinge?.status == .partiallyOpen
+            }
+        }
+    }
+}
+```
+
+- `ArrangementView` lays out two related panes, primary and secondary. `.overlay` layers primary over secondary on a flat display and separates them across the fold. `.split` puts them side by side, horizontal in landscape and vertical in portrait. Restrict the axes with `.split.axes(.horizontal)`. Size a split pane with `.splitArrangementLayoutRatio(_:)`.
+- `GeometryProxy.reservedRegions(kind:)` returns the `ReservedRegion` values to keep content off. `.division` is the hinge. `.occlusion` is the camera. Each has a `frame` and `margins`.
+- `onHingeChange` hands over the old and new `DeviceHingeContext`. `hinge` is nil on a device that doesn't fold. Otherwise it has an `angle` and a `status`: `.closed`, `.partiallyOpen`, or `.fullyOpen`.
 
 `ArrangementView` is a top-level container. Don't put it inside a scroll view or split view, and don't put a `TabView` or `NavigationSplitView` inside it.
 

@@ -35,7 +35,7 @@ color schemes (pick one), as background/primary, text/primary, text/disabled:
 typography: monospace (JetBrains Mono, IBM Plex Mono, platform mono);
             display in a pixel font, as real text at whole multiples of its design size
 effects:
-  scanline   4px period, 5-8% opacity (legibility breaks above 10%)
+  effect/scanline   period 4px, thickness 2px, color black at 5-8% (legibility breaks above 10%)
   crt-curve  vignette, optional slight barrel distortion at the edges
   noise      10-15% on imagery and backgrounds, not over text
 radius: 0; one large radius only on a frame simulating the CRT glass
@@ -73,10 +73,10 @@ struct Scanlines: View {
             var y: CGFloat = 0
             while y < size.height {
                 context.fill(
-                    Path(CGRect(x: 0, y: y, width: size.width, height: CRT.lineHeight)),
-                    with: .color(CRT.scanline)
+                    Path(CGRect(x: 0, y: y, width: size.width, height: Effect.Scanline.thickness)),
+                    with: .color(Effect.Scanline.color)
                 )
-                y += CRT.linePeriod
+                y += Effect.Scanline.period
             }
         }
         .allowsHitTesting(false)
@@ -124,8 +124,8 @@ body::after {
   inset: 0;
   background: repeating-linear-gradient(
     0deg,
-    transparent 0 calc(var(--scanline-period) / 2),
-    var(--scanline) calc(var(--scanline-period) / 2) var(--scanline-period)
+    transparent 0 calc(var(--effect-scanline-period) / 2),
+    var(--effect-scanline-color) calc(var(--effect-scanline-period) / 2) var(--effect-scanline-period)
   );
   pointer-events: none;
 }

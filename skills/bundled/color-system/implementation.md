@@ -243,6 +243,12 @@ Names follow `figma-design-system/reference/token-architecture.md`: `--color-pri
     --color-primitive-accent-red-light: oklch(64.93% 0.2141 28.23);
     --color-primitive-accent-red-lighter: oklch(71.05% 0.1777 28.37);
     --color-primitive-accent-red-lightest: oklch(78.11% 0.1239 28.63);
+    --color-primitive-swiss-blue: oklch(41.20% 0.1468 262.50);
+    --color-primitive-accent-blue-light: oklch(66.08% 0.1697 262.27);
+    --color-primitive-swiss-green: oklch(46.78% 0.1091 152.01);
+    --color-primitive-accent-green-light: oklch(60.99% 0.1387 151.64);
+    --color-primitive-swiss-ochre: oklch(50.91% 0.1037 77.95);
+    --color-primitive-swiss-yellow: oklch(84.94% 0.1739 92.82);
     --color-primitive-swiss-ink: oklch(21.78% 0 0);
     --color-primitive-warm-100: oklch(98.43% 0.0040 106.47);
     --color-primitive-warm-200: oklch(96.43% 0.0070 88.64);
@@ -267,6 +273,12 @@ Names follow `figma-design-system/reference/token-architecture.md`: `--color-pri
     --color-semantic-interactive-primary: light-dark(var(--color-primitive-swiss-red), var(--color-primitive-accent-red-light));
     --color-semantic-interactive-primary-hover: light-dark(var(--color-primitive-bauhaus-red), var(--color-primitive-accent-red-lighter));
     --color-semantic-interactive-primary-pressed: light-dark(var(--color-primitive-swiss-red-deep), var(--color-primitive-accent-red-lightest));
+    --color-semantic-status-error: light-dark(var(--color-primitive-swiss-red-deep), var(--color-primitive-accent-red-light));
+    --color-semantic-status-warning: light-dark(var(--color-primitive-swiss-ochre), var(--color-primitive-swiss-yellow));
+    --color-semantic-status-success: light-dark(var(--color-primitive-swiss-green), var(--color-primitive-accent-green-light));
+    --color-semantic-status-info: light-dark(var(--color-primitive-swiss-blue), var(--color-primitive-accent-blue-light));
+    --color-semantic-accent-primary: light-dark(var(--color-primitive-swiss-blue), var(--color-primitive-accent-blue-light));
+    --color-semantic-accent-secondary: var(--color-primitive-swiss-yellow);
 }
 
 .button {
@@ -344,15 +356,29 @@ extension Color {
         enum Text {
             static let primary = Color(.colorSemanticTextPrimary)
         }
+        enum Border {
+            static let `default` = Color(.colorSemanticBorderDefault)
+        }
+        enum Status {
+            static let error = Color(.colorSemanticStatusError)
+        }
+        enum Interactive {
+            static let primary = Color(.colorSemanticInteractivePrimary)
+            static let primaryHover = Color(.colorSemanticInteractivePrimaryHover)
+        }
+        enum Accent {
+            static let primary = Color(.colorSemanticAccentPrimary)
+        }
     }
 }
 
 Text("Title")
     .foregroundStyle(Color.Semantic.Text.primary)
     .background(Color.Semantic.Background.primary)
+    .border(Color.Semantic.Border.default)
 ```
 
-`.colorSemanticBackgroundPrimary` is the symbol Xcode generates for a color set of that name. Call sites use the `Color.Semantic` namespace.
+`.colorSemanticBackgroundPrimary` is the symbol Xcode generates for a color set of that name. Call sites use the `Color.Semantic` namespace. One nested enum per group: `Background`, `Text`, `Border`, `Status`, `Interactive`, `Accent`. Every role in the mapping table gets a member. `default` needs backticks where it's declared, not where it's used.
 
 Enter the palette's hex values with the color set's color space left at sRGB. They're sRGB values. Tag the same numbers as Display P3 and they render more saturated than specified. Use Display P3 in the asset catalog, or `Color(.displayP3, red:green:blue:opacity:)`, only for a color that was designed in P3.
 
@@ -577,7 +603,7 @@ Figma paths are lowercase, slash-separated, kebab-case inside a segment. Every t
 | Stacking | `z/<layer>` | One token per layer: `z/modal`, `z/toast` | Platform skills |
 | Effect | `effect/<kind>/<step>` | `effect/blur/md`, `effect/glow/radius` | `visual-styles`, platform skills |
 | Shadow | `shadow/<name>` | A whole shadow recipe: `shadow/raised`, `shadow/inset`, `shadow/hard-sm` | `visual-styles`, platform skills |
-| Typography | `typography/family/<name>`, `typography/size/<role>`, `typography/weight/<name>`, `typography/leading/<name>` | Below | Platform skills (sizes), this file (names) |
+| Typography | `typography/family/<name>`, `typography/size/<role>`, `typography/weight/<name>`, `typography/leading/<name>`, `typography/tracking/<name>` | Below | Platform skills (sizes), this file (names) |
 | Motion | `motion/spring/<name>`, `motion/duration/<name>`, `motion/ease/<name>`, `motion/distance/<size>` | Listed in `motion-design` (reference/cross-platform-tokens.md), not here | `motion-design` |
 | Glass | `glass/<parameter>/<variant>` | Figma-only, in [liquid-glass.md](../figma-design-system/liquid-glass.md) | No code equivalent. The system draws glass |
 

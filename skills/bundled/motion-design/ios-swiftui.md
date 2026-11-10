@@ -397,7 +397,7 @@ Version numbers, release dates, and beta state live here and nowhere else in thi
 | iOS / iPadOS | 27.2.1 (November 9, 2026). 27.0 shipped September 14, 2026. | 27.3 beta (November 3, 2026) |
 | macOS | macOS 27 Golden Gate, 27.2.1 (November 9, 2026) | 27.3 beta |
 | Xcode | 27.2 (October 29, 2026). Xcode 27 shipped September 14, 2026. Requires macOS Tahoe 26.6 or later. | 27.3 beta |
-| Swift | 6.4 (bundled with Xcode 27 through 27.2) | |
+| Swift | 6.4 (6.4.2 in Xcode 27.2) | |
 
 Xcode 27.1 carries the iOS 27.1 SDK, which is where the fold-aware layout APIs start.
 
@@ -458,7 +458,7 @@ Availability is iOS / iPadOS / macOS 27 unless noted. Usage for the navigation i
 - Selectable `Text` uses the full system selection UI on iOS, adds its own gestures, and works with `TextRenderer`.
 - `GeometryProxy.concentricCornerRadii`.
 - macOS: `Slider` is no longer backed by `NSSlider`. `.glass` and `.glassProminent` buttons outside a toolbar have a hover state.
-- 27.1 SDK: `ArrangementView`, `ReservedRegion`, `onHingeChange`, and vertical-axis toolbar APIs for iPhone Duo.
+- 27.1: `ArrangementView`, `ReservedRegion`, `onHingeChange`, and vertical-axis toolbar APIs for iPhone Duo.
 
 **Data flow and language**
 
@@ -488,7 +488,7 @@ Code written from the summer betas or the WWDC session has these wrong.
 
 ##### New Hardware
 
-iPhone Duo is a folding iPhone. Its layout APIs need the iOS 27.1 SDK. Layout rules are in `navigation-components.md` under Foldable Layout.
+iPhone Duo is a folding iPhone. Its layout APIs are 27.1. Layout rules are in `navigation-components.md` under Foldable Layout.
 
 ##### Apple Docs
 

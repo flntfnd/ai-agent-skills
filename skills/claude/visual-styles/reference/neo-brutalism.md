@@ -33,7 +33,7 @@ color/semantic/text/on-brand       → black or white, whichever passes 4.5:1 on
 color/semantic/border/default      → #000000 at 100%
 
 radius: 0 everywhere; 4 on explicitly softened elements only
-border/width: default 2px, heavy 4px
+size/border-width 2px   size/border-width-heavy 4px   size/hard-shadow-offset 4px
 shadow/hard-sm 2px 2px 0 0   md 4px 4px 0 0   lg 6px 6px 0 0   xl 8px 8px 0 0   (border/default color)
 
 typography/weight/headline → ExtraBold (800) or Black (900)
@@ -70,16 +70,16 @@ struct NeoBrutalButtonStyle: ButtonStyle {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     func makeBody(configuration: Configuration) -> some View {
-        let shift = configuration.isPressed ? HardShadow.offset : 0
+        let shift = configuration.isPressed ? Size.hardShadowOffset : 0
 
         configuration.label
             .padding(Spacing.s5)
             .background(Color.Semantic.Interactive.primary)
-            .border(Color.Semantic.Border.default, width: BorderWidth.default)
+            .border(Color.Semantic.Border.default, width: Size.borderWidth)
             .background(
                 Rectangle()
                     .fill(Color.Semantic.Border.default)
-                    .offset(x: HardShadow.offset - shift, y: HardShadow.offset - shift)
+                    .offset(x: Size.hardShadowOffset - shift, y: Size.hardShadowOffset - shift)
             )
             .offset(x: shift, y: shift)
             .animation(reduceMotion ? nil : Motion.Spring.snappy, value: configuration.isPressed)
@@ -115,7 +115,7 @@ Box(
 **Web**
 ```css
 .nb-button {
-  border: var(--border-width-default) solid var(--color-semantic-border-default);
+  border: var(--size-border-width) solid var(--color-semantic-border-default);
   box-shadow: var(--shadow-hard-md);
   border-radius: 0;
   transition: box-shadow var(--spring-snappy-duration) var(--spring-snappy),

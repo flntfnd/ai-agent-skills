@@ -29,8 +29,8 @@ color/semantic/interactive/primary → one saturated accent, for selected state 
 color/semantic/border/default      → none; text/secondary at 1px under increased contrast
 
 shadow tones derive from the base, not from fixed white and black:
-  tone-light: base toward white (70% on the light theme, about 8% on the dark theme)
-  tone-dark:  base toward black (20% on the light theme, 50% on the dark theme)
+  color/semantic/background/tone-light: base toward white (70% on the light theme, about 8% on the dark theme)
+  color/semantic/background/tone-dark:  base toward black (20% on the light theme, 50% on the dark theme)
 shadow/raised: -4px -4px 8px tone-light,  4px 4px 8px tone-dark
 shadow/inset:  inset 2px 2px 6px tone-dark,  inset -2px -2px 6px tone-light
 
@@ -73,13 +73,13 @@ struct NeumorphicButtonStyle: ButtonStyle {
                 if configuration.isPressed {
                     shape.fill(
                         base
-                            .shadow(.inner(color: ShadowTone.dark, radius: 6, x: 2, y: 2))
-                            .shadow(.inner(color: ShadowTone.light, radius: 6, x: -2, y: -2))
+                            .shadow(.inner(color: Color.Semantic.Background.toneDark, radius: 6, x: 2, y: 2))
+                            .shadow(.inner(color: Color.Semantic.Background.toneLight, radius: 6, x: -2, y: -2))
                     )
                 } else {
                     shape.fill(base)
-                        .shadow(color: ShadowTone.light, radius: 8, x: -4, y: -4)
-                        .shadow(color: ShadowTone.dark, radius: 8, x: 4, y: 4)
+                        .shadow(color: Color.Semantic.Background.toneLight, radius: 8, x: -4, y: -4)
+                        .shadow(color: Color.Semantic.Background.toneDark, radius: 8, x: 4, y: 4)
                 }
             }
             .overlay {
@@ -117,10 +117,10 @@ Order matters: drop shadows before `background`, inner shadows after it. Elevati
 **Web**
 ```css
 :root {
-  --tone-light: color-mix(in oklch, var(--color-semantic-background-primary), white 70%);
-  --tone-dark:  color-mix(in oklch, var(--color-semantic-background-primary), black 20%);
-  --shadow-raised: -4px -4px 8px var(--tone-light), 4px 4px 8px var(--tone-dark);
-  --shadow-inset:  inset 2px 2px 6px var(--tone-dark), inset -2px -2px 6px var(--tone-light);
+  --color-semantic-background-tone-light: color-mix(in oklch, var(--color-semantic-background-primary), white 70%);
+  --color-semantic-background-tone-dark:  color-mix(in oklch, var(--color-semantic-background-primary), black 20%);
+  --shadow-raised: -4px -4px 8px var(--color-semantic-background-tone-light), 4px 4px 8px var(--color-semantic-background-tone-dark);
+  --shadow-inset:  inset 2px 2px 6px var(--color-semantic-background-tone-dark), inset -2px -2px 6px var(--color-semantic-background-tone-light);
 }
 .neu { background: var(--color-semantic-background-primary); border: 0; box-shadow: var(--shadow-raised); }
 .neu:active, .neu[aria-pressed="true"] { box-shadow: var(--shadow-inset); }

@@ -262,7 +262,7 @@ Figma paths are lowercase, slash-separated, kebab-case inside a segment. Every t
 | Stacking | `z/<layer>` | One token per layer: `z/modal`, `z/toast` | Platform skills |
 | Effect | `effect/<kind>/<step>` | `effect/blur/md`, `effect/glow/radius` | `visual-styles`, platform skills |
 | Shadow | `shadow/<name>` | A whole shadow recipe: `shadow/raised`, `shadow/inset`, `shadow/hard-sm` | `visual-styles`, platform skills |
-| Typography | `typography/family/<name>`, `typography/size/<role>`, `typography/weight/<name>`, `typography/leading/<name>` | Below | Platform skills (sizes), this file (names) |
+| Typography | `typography/family/<name>`, `typography/size/<role>`, `typography/weight/<name>`, `typography/leading/<name>`, `typography/tracking/<name>` | Below | Platform skills (sizes), this file (names) |
 | Motion | `motion/spring/<name>`, `motion/duration/<name>`, `motion/ease/<name>`, `motion/distance/<size>` | Listed in `motion-design` (reference/cross-platform-tokens.md), not here | `motion-design` |
 | Glass | `glass/<parameter>/<variant>` | Figma-only, in [liquid-glass.md](../figma-design-system/liquid-glass.md) | No code equivalent. The system draws glass |
 

@@ -69,8 +69,8 @@ struct Reader: View {
     var body: some View {
         ScrollView {
             Text(article)
-                .lineSpacing(Reading.lineSpacing)
-                .frame(maxWidth: Reading.measure)
+                .lineSpacing(Typography.Leading.reading)
+                .frame(maxWidth: Size.measure)
                 .padding(.horizontal, Spacing.s8)
         }
         .background(Color.Semantic.Background.primary)

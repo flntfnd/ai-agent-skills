@@ -168,7 +168,7 @@ struct SectionHeader: View {
             Text(label)
                 .font(.caption.weight(.semibold))
                 .textCase(.uppercase)
-                .kerning(Tracking.label)
+                .kerning(Typography.Tracking.label)
             Text(headline)
                 .font(.system(.largeTitle, design: .serif))
         }
@@ -202,7 +202,7 @@ Tracking is in `em`, not `sp`, so it scales with the font size.
   padding-inline-start: var(--gutter);
 }
 .rule--section { border: 0; border-top: 3px solid var(--color-semantic-text-primary); }
-.label { font-size: var(--size-label); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+.label { font-size: var(--typography-size-label); letter-spacing: var(--typography-tracking-label); text-transform: uppercase; }
 table { font-variant-numeric: tabular-nums lining-nums; }
 @media (max-width: 767px) { .lead, .rail { grid-column: 1 / -1; border: 0; padding: 0; } }
 ```

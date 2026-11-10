@@ -180,7 +180,7 @@ struct StatusReadout: View {
             .fontDesign(.monospaced)
             .monospacedDigit()
             .foregroundStyle(Color.Semantic.Interactive.primary)
-            .modifier(Glow(color: Color.Semantic.Interactive.primary, radius: GlowRadius.sm))
+            .modifier(Glow(color: Color.Semantic.Interactive.primary, radius: Effect.Glow.sm))
             .preferredColorScheme(.dark)
     }
 }

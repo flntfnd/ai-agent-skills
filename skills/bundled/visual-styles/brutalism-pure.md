@@ -125,7 +125,7 @@ color/semantic/border/default     → ink
 color/semantic/interactive/primary → ink, or one saturated accent (must pass 4.5:1 on paper)
 dark mode: ink and paper swap, nothing else
 
-radius: 0     shadow: none     border/rule: 1-2px solid
+radius: 0     shadow: none     size/rule: 1-2px, solid
 spacing: large and deliberately uneven (generous above a section, tight under its heading)
 typography: one family, monospace or grotesque
   display clamp(3rem, 10vw, 8rem), line-height 1
@@ -164,7 +164,7 @@ struct InvertButtonStyle: ButtonStyle {
             .padding(Spacing.s3)
             .foregroundStyle(configuration.isPressed ? paper : ink)
             .background(configuration.isPressed ? ink : Color.clear)
-            .border(ink, width: BorderWidth.default)
+            .border(ink, width: Size.rule)
     }
 }
 ```
@@ -192,9 +192,9 @@ Text(
 **Web**
 ```css
 h1 { font-size: clamp(3rem, 10vw, 8rem); line-height: 1; font-weight: 400; }
-hr { border: 0; border-top: var(--border-rule) solid var(--color-semantic-border-default); }
+hr { border: 0; border-top: var(--size-rule) solid var(--color-semantic-border-default); }
 a  { color: inherit; text-decoration: underline; }
-button { font: inherit; background: none; color: inherit; border: var(--border-rule) solid; border-radius: 0; }
+button { font: inherit; background: none; color: inherit; border: var(--size-rule) solid; border-radius: 0; }
 a:hover, button:hover, :focus-visible {
   background: var(--color-semantic-text-primary);
   color: var(--color-semantic-background-primary);
