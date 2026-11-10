@@ -93,7 +93,7 @@ interactive/primary-hover          bauhaus-red       accent-red-lighter
 interactive/primary-pressed        swiss-red-deep    accent-red-lightest
 interactive/primary-disabled       warm-500          cool-700
 
-status/error                       swiss-red-deep    accent-red-light
+status/error                       swiss-red-deep    accent-red-lighter
 status/warning                     swiss-ochre       swiss-yellow
 status/success                     swiss-green       accent-green-light
 status/info                        swiss-blue        accent-blue-light
@@ -105,7 +105,7 @@ accent/secondary                   swiss-yellow      swiss-yellow
 - `interactive/primary` can be `swiss-blue` instead, per brand.
 - `text/inverse` is the label on every `interactive/primary` state, in both modes.
 - Light states get darker. Dark states get lighter. Both step the same way through default, hover, pressed.
-- `status/*` works as text and as a mark in both modes. One exception: on dark `background/elevated`, error and success are marks or large text only.
+- `status/*` works as text and as a mark in both modes, on every background.
 - Dark `status/info` is blue, not cyan. Info is blue in light mode and a role keeps its hue across modes. Cyan stays an accent.
 - `accent/*` is decorative. It's never the only thing carrying meaning and never an interactive state. `accent/secondary` is yellow, so it's a fill or a large shape with `swiss-ink` on top, never text on a light surface.
 - `swiss-yellow` is still the warning fill in light mode when the warning is a banner or badge: yellow background, `swiss-ink` text. `status/warning` is for the mark and the text.
@@ -157,9 +157,9 @@ Dark. Ratios on background/primary / elevated / sunken (cool-900 / cool-800 / co
 text/primary                  cool-100              16.19 / 12.51 / 18.06
 text/secondary                cool-500              6.65 / 5.14 / 7.42
 border/strong                 cool-300              13.40 / 10.36 / 14.96
-status/error                  accent-red-light      4.76 / 3.68 / 5.31
+status/error                  accent-red-lighter    6.15 / 4.76 / 6.87
 status/warning                swiss-yellow          10.75 / 8.31 / 12.00
-status/success                accent-green-light    4.79 / 3.70 / 5.34
+status/success                accent-green-light    5.91 / 4.57 / 6.60
 status/info                   accent-blue-light     5.92 / 4.58 / 6.61
 accent/primary                accent-blue-light     5.92 / 4.58 / 6.61
 
@@ -203,7 +203,7 @@ The rules that come out of the numbers:
 - **Yellow is a fill, never text or a mark on a light surface.** Background with `swiss-ink` on top, or text on dark surfaces only. On light surfaces the warning mark and text are `swiss-ochre`.
 - **Red as text has no margin on light neutrals.** `swiss-red` passes for body text on `warm-100` and `warm-200` and fails on `warm-300`. That's why `status/error` is `swiss-red-deep`. On near-black use `swiss-red-warm` or `accent-red-light`.
 - **`swiss-red-warm` isn't a state color.** It drops a `warm-100` label to 4.14:1.
-- **Dark elevated surfaces are the tight spot.** `accent-red-light` and `accent-green-light` are 3.68:1 and 3.70:1 on `cool-800`. Marks and large text only there. Set the message in `text/primary`.
+- **Dark error is a step lighter than the dark primary.** `accent-red-light` is 3.68:1 on `cool-800`, fine for a fill and not for text. `status/error` uses `accent-red-lighter`, which holds 4.76:1 there.
 - **Default borders are decorative.** Where a border is the only thing identifying a control, like an input field, use `border/strong`.
 - **Color is never the only signal.** Error, warning, and success get an icon or text alongside the color.
 
@@ -246,7 +246,7 @@ Names follow `figma-design-system/reference/token-architecture.md`: `--color-pri
     --color-primitive-swiss-blue: oklch(41.20% 0.1468 262.50);
     --color-primitive-accent-blue-light: oklch(68.42% 0.1609 262.54);
     --color-primitive-swiss-green: oklch(46.78% 0.1091 152.01);
-    --color-primitive-accent-green-light: oklch(60.99% 0.1387 151.64);
+    --color-primitive-accent-green-light: oklch(66.40% 0.1384 151.66);
     --color-primitive-swiss-ochre: oklch(50.91% 0.1037 77.95);
     --color-primitive-swiss-yellow: oklch(84.94% 0.1739 92.82);
     --color-primitive-swiss-ink: oklch(21.78% 0 0);
@@ -273,7 +273,7 @@ Names follow `figma-design-system/reference/token-architecture.md`: `--color-pri
     --color-semantic-interactive-primary: light-dark(var(--color-primitive-swiss-red), var(--color-primitive-accent-red-light));
     --color-semantic-interactive-primary-hover: light-dark(var(--color-primitive-bauhaus-red), var(--color-primitive-accent-red-lighter));
     --color-semantic-interactive-primary-pressed: light-dark(var(--color-primitive-swiss-red-deep), var(--color-primitive-accent-red-lightest));
-    --color-semantic-status-error: light-dark(var(--color-primitive-swiss-red-deep), var(--color-primitive-accent-red-light));
+    --color-semantic-status-error: light-dark(var(--color-primitive-swiss-red-deep), var(--color-primitive-accent-red-lighter));
     --color-semantic-status-warning: light-dark(var(--color-primitive-swiss-ochre), var(--color-primitive-swiss-yellow));
     --color-semantic-status-success: light-dark(var(--color-primitive-swiss-green), var(--color-primitive-accent-green-light));
     --color-semantic-status-info: light-dark(var(--color-primitive-swiss-blue), var(--color-primitive-accent-blue-light));

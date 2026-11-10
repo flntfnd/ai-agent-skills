@@ -67,24 +67,7 @@
         "evidence": "`text/inverse` is the label on every `interactive/primary` state"
       }
     ],
-    "overrides": [
-      {
-        "token": "status/error",
-        "mode": "dark",
-        "on": "background/elevated",
-        "min": 3,
-        "reason": "Marks and large text only on dark elevated surfaces.",
-        "evidence": "on dark `background/elevated`, error and success are marks or large text only"
-      },
-      {
-        "token": "status/success",
-        "mode": "dark",
-        "on": "background/elevated",
-        "min": 3,
-        "reason": "Marks and large text only on dark elevated surfaces.",
-        "evidence": "on dark `background/elevated`, error and success are marks or large text only"
-      }
-    ]
+    "overrides": []
   },
   "primitiveReferences": [
     {

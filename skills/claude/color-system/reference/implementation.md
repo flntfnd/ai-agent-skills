@@ -35,7 +35,7 @@ Names follow `figma-design-system/reference/token-architecture.md`: `--color-pri
     --color-primitive-swiss-blue: oklch(41.20% 0.1468 262.50);
     --color-primitive-accent-blue-light: oklch(68.42% 0.1609 262.54);
     --color-primitive-swiss-green: oklch(46.78% 0.1091 152.01);
-    --color-primitive-accent-green-light: oklch(60.99% 0.1387 151.64);
+    --color-primitive-accent-green-light: oklch(66.40% 0.1384 151.66);
     --color-primitive-swiss-ochre: oklch(50.91% 0.1037 77.95);
     --color-primitive-swiss-yellow: oklch(84.94% 0.1739 92.82);
     --color-primitive-swiss-ink: oklch(21.78% 0 0);
@@ -62,7 +62,7 @@ Names follow `figma-design-system/reference/token-architecture.md`: `--color-pri
     --color-semantic-interactive-primary: light-dark(var(--color-primitive-swiss-red), var(--color-primitive-accent-red-light));
     --color-semantic-interactive-primary-hover: light-dark(var(--color-primitive-bauhaus-red), var(--color-primitive-accent-red-lighter));
     --color-semantic-interactive-primary-pressed: light-dark(var(--color-primitive-swiss-red-deep), var(--color-primitive-accent-red-lightest));
-    --color-semantic-status-error: light-dark(var(--color-primitive-swiss-red-deep), var(--color-primitive-accent-red-light));
+    --color-semantic-status-error: light-dark(var(--color-primitive-swiss-red-deep), var(--color-primitive-accent-red-lighter));
     --color-semantic-status-warning: light-dark(var(--color-primitive-swiss-ochre), var(--color-primitive-swiss-yellow));
     --color-semantic-status-success: light-dark(var(--color-primitive-swiss-green), var(--color-primitive-accent-green-light));
     --color-semantic-status-info: light-dark(var(--color-primitive-swiss-blue), var(--color-primitive-accent-blue-light));

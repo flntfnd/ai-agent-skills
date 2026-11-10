@@ -672,12 +672,12 @@ The Swiss accents lifted for dark backgrounds. On light surfaces use the `swiss-
 
 | Token | Hex | OKLCH | Notes |
 | --- | --- | --- | --- |
-| `accent-red-light` | `#F6463B` | `oklch(64.93% 0.2141 28.23)` | Light red for dark backgrounds. Dark-mode primary and error. |
-| `accent-red-lighter` | `#FD6E5F` | `oklch(71.05% 0.1777 28.37)` | Lighter step of the same red. Dark-mode hover. |
+| `accent-red-light` | `#F6463B` | `oklch(64.93% 0.2141 28.23)` | Light red for dark backgrounds. Dark-mode primary. |
+| `accent-red-lighter` | `#FD6E5F` | `oklch(71.05% 0.1777 28.37)` | Lighter step of the same red. Dark-mode hover and error. |
 | `accent-red-lightest` | `#FD988A` | `oklch(78.11% 0.1239 28.63)` | Lightest step of the same red. Dark-mode pressed. |
 | `accent-blue-light` | `#6296FC` | `oklch(68.42% 0.1609 262.54)` | Light blue for dark backgrounds. Dark-mode info and accent. |
 | `accent-yellow-light` | `#FFDA00` | `oklch(89.27% 0.1839 96.61)` | Brighter yellow for impact. |
-| `accent-green-light` | `#319A57` | `oklch(60.99% 0.1387 151.64)` | Light green for dark backgrounds. Dark-mode success. |
+| `accent-green-light` | `#45AB67` | `oklch(66.40% 0.1384 151.66)` | Light green for dark backgrounds. Dark-mode success. |
 | `accent-orange-light` | `#F07830` | `oklch(70.08% 0.1687 47.71)` | Light orange for dark backgrounds. |
 | `accent-cyan-light` | `#00B8CC` | `oklch(71.61% 0.1233 208.50)` | Light cyan for dark backgrounds. |
 
@@ -724,7 +724,7 @@ Names follow `figma-design-system/reference/token-architecture.md`: `--color-pri
     --color-primitive-swiss-blue: oklch(41.20% 0.1468 262.50);
     --color-primitive-accent-blue-light: oklch(68.42% 0.1609 262.54);
     --color-primitive-swiss-green: oklch(46.78% 0.1091 152.01);
-    --color-primitive-accent-green-light: oklch(60.99% 0.1387 151.64);
+    --color-primitive-accent-green-light: oklch(66.40% 0.1384 151.66);
     --color-primitive-swiss-ochre: oklch(50.91% 0.1037 77.95);
     --color-primitive-swiss-yellow: oklch(84.94% 0.1739 92.82);
     --color-primitive-swiss-ink: oklch(21.78% 0 0);
@@ -751,7 +751,7 @@ Names follow `figma-design-system/reference/token-architecture.md`: `--color-pri
     --color-semantic-interactive-primary: light-dark(var(--color-primitive-swiss-red), var(--color-primitive-accent-red-light));
     --color-semantic-interactive-primary-hover: light-dark(var(--color-primitive-bauhaus-red), var(--color-primitive-accent-red-lighter));
     --color-semantic-interactive-primary-pressed: light-dark(var(--color-primitive-swiss-red-deep), var(--color-primitive-accent-red-lightest));
-    --color-semantic-status-error: light-dark(var(--color-primitive-swiss-red-deep), var(--color-primitive-accent-red-light));
+    --color-semantic-status-error: light-dark(var(--color-primitive-swiss-red-deep), var(--color-primitive-accent-red-lighter));
     --color-semantic-status-warning: light-dark(var(--color-primitive-swiss-ochre), var(--color-primitive-swiss-yellow));
     --color-semantic-status-success: light-dark(var(--color-primitive-swiss-green), var(--color-primitive-accent-green-light));
     --color-semantic-status-info: light-dark(var(--color-primitive-swiss-blue), var(--color-primitive-accent-blue-light));
