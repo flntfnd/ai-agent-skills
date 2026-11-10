@@ -74,7 +74,7 @@
         "on": "background/elevated",
         "min": 3,
         "reason": "Marks and large text only on dark elevated surfaces.",
-        "evidence": "on dark `background/elevated`, error, success and info are marks or large text only"
+        "evidence": "on dark `background/elevated`, error and success are marks or large text only"
       },
       {
         "token": "status/success",
@@ -82,15 +82,7 @@
         "on": "background/elevated",
         "min": 3,
         "reason": "Marks and large text only on dark elevated surfaces.",
-        "evidence": "on dark `background/elevated`, error, success and info are marks or large text only"
-      },
-      {
-        "token": "status/info",
-        "mode": "dark",
-        "on": "background/elevated",
-        "min": 3,
-        "reason": "Marks and large text only on dark elevated surfaces.",
-        "evidence": "on dark `background/elevated`, error, success and info are marks or large text only"
+        "evidence": "on dark `background/elevated`, error and success are marks or large text only"
       }
     ]
   },

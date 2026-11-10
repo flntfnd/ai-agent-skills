@@ -675,7 +675,7 @@ The Swiss accents lifted for dark backgrounds. On light surfaces use the `swiss-
 | `accent-red-light` | `#F6463B` | `oklch(64.93% 0.2141 28.23)` | Light red for dark backgrounds. Dark-mode primary and error. |
 | `accent-red-lighter` | `#FD6E5F` | `oklch(71.05% 0.1777 28.37)` | Lighter step of the same red. Dark-mode hover. |
 | `accent-red-lightest` | `#FD988A` | `oklch(78.11% 0.1239 28.63)` | Lightest step of the same red. Dark-mode pressed. |
-| `accent-blue-light` | `#578EF9` | `oklch(66.08% 0.1697 262.27)` | Light blue for dark backgrounds. Dark-mode info and accent. |
+| `accent-blue-light` | `#6296FC` | `oklch(68.42% 0.1609 262.54)` | Light blue for dark backgrounds. Dark-mode info and accent. |
 | `accent-yellow-light` | `#FFDA00` | `oklch(89.27% 0.1839 96.61)` | Brighter yellow for impact. |
 | `accent-green-light` | `#319A57` | `oklch(60.99% 0.1387 151.64)` | Light green for dark backgrounds. Dark-mode success. |
 | `accent-orange-light` | `#F07830` | `oklch(70.08% 0.1687 47.71)` | Light orange for dark backgrounds. |
@@ -722,7 +722,7 @@ Names follow `figma-design-system/reference/token-architecture.md`: `--color-pri
     --color-primitive-accent-red-lighter: oklch(71.05% 0.1777 28.37);
     --color-primitive-accent-red-lightest: oklch(78.11% 0.1239 28.63);
     --color-primitive-swiss-blue: oklch(41.20% 0.1468 262.50);
-    --color-primitive-accent-blue-light: oklch(66.08% 0.1697 262.27);
+    --color-primitive-accent-blue-light: oklch(68.42% 0.1609 262.54);
     --color-primitive-swiss-green: oklch(46.78% 0.1091 152.01);
     --color-primitive-accent-green-light: oklch(60.99% 0.1387 151.64);
     --color-primitive-swiss-ochre: oklch(50.91% 0.1037 77.95);

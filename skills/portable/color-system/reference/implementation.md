@@ -33,7 +33,7 @@ Names follow `figma-design-system/reference/token-architecture.md`: `--color-pri
     --color-primitive-accent-red-lighter: oklch(71.05% 0.1777 28.37);
     --color-primitive-accent-red-lightest: oklch(78.11% 0.1239 28.63);
     --color-primitive-swiss-blue: oklch(41.20% 0.1468 262.50);
-    --color-primitive-accent-blue-light: oklch(66.08% 0.1697 262.27);
+    --color-primitive-accent-blue-light: oklch(68.42% 0.1609 262.54);
     --color-primitive-swiss-green: oklch(46.78% 0.1091 152.01);
     --color-primitive-accent-green-light: oklch(60.99% 0.1387 151.64);
     --color-primitive-swiss-ochre: oklch(50.91% 0.1037 77.95);
