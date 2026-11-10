@@ -77,8 +77,8 @@ cargo deny check
 
 - **Clippy with warnings denied.** `CARGO_BUILD_WARNINGS=deny` on Cargo 1.97 or later; `cargo clippy --all-targets --all-features -- -D warnings` on older toolchains. Don't set `-D warnings` through `RUSTFLAGS`. It invalidates the build cache.
 - **`--locked`**, with `Cargo.lock` committed. Compromised releases of popular crates have sat on crates.io for over an hour before being pulled. The lockfile is what keeps a CI run from picking one up.
-- **`cargo audit`** checks `Cargo.lock` against the RustSec advisory database. A vulnerability advisory is critical and blocks merge. Unmaintained and yanked notices are warnings: replace the crate, or record an `ignore` entry with the advisory id and a written reason.
-- **`cargo deny check`** runs the advisories, bans, licenses, and sources checks against `deny.toml`. Required on anything past a prototype.
+- **`cargo audit`** checks `Cargo.lock` against the RustSec advisory database. A vulnerability advisory is critical and blocks merge. Unmaintained and yanked notices are warnings: replace the crate, or record an `ignore` entry with the advisory id and a written reason. It reads the lockfile, not the build, and the lockfile lists optional dependencies that never compile (sqlx's other database drivers, for one). If `cargo tree -i <crate>` prints nothing, the crate isn't built. Ignore that advisory in `.cargo/audit.toml` and say so in the comment.
+- **`cargo deny check`** runs the advisories, bans, licenses, and sources checks against `deny.toml`. Required on anything past a prototype. `cargo deny init` writes a file that allows no licenses, so every crate fails until you fill in the list. A working one is in [reference/testing-and-structure.md](testing-and-structure.md).
 - **Tests**: `cargo nextest run` is the default runner. `cargo test --all-features` is fine where a project doesn't use it.
 - rustfmt defaults. Don't customize without a written reason.
 
@@ -152,7 +152,7 @@ Every `.await` is a cancellation point. If the future is dropped (a timeout, `se
 
 ```rust
 async fn process(file: &File) -> Result<Output> {
-    let _guard = scopeguard::guard(file, |f| cleanup_sync(f)); // runs on completion and on cancellation
+    let _guard = scopeguard::guard(file, cleanup_sync); // runs on completion and on cancellation
     let data = read_async(file).await?;
     transform(&data).await
 }
@@ -190,11 +190,8 @@ Sync work longer than a few tens of microseconds stalls every task queued on tha
 Spawn, await in scope, handle results.
 
 ```rust
-let (user, orders, prefs) = tokio::try_join!(
-    fetch_user(id),
-    fetch_orders(id),
-    fetch_preferences(id),
-)?;
+let (user, orders, prefs) =
+    tokio::try_join!(fetch_user(id), fetch_orders(id), fetch_preferences(id))?;
 ```
 
 `try_join!` runs the futures concurrently on one task and returns on the first error, dropping the rest. For a dynamic number of tasks use `JoinSet`, which aborts its tasks when dropped:

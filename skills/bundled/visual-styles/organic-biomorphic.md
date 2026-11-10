@@ -202,6 +202,7 @@ val shape = GenericShape { size, _ ->
         centerY = size.height / 2,
         perVertexRounding = blobRounding      // a different CornerRounding per vertex
     )
+    // Import androidx.graphics.shapes.toPath by name. material3 has a toPath of its own.
     addPath(blob.toPath().asComposePath())
 }
 Box(Modifier.clip(shape).background(Brush.linearGradient(gradientForest)).padding(blobInset))

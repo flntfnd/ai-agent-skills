@@ -97,6 +97,6 @@ Every rule has a reason. If the reason doesn't apply, say so and proceed. Don't 
 - **Edge-to-edge and every window size.** The platform enforces both on current targets.
 - **Springs for user-triggered motion**, from `MaterialTheme.motionScheme`. Duration-based `tween` only for system-triggered motion with no gesture behind it. Never linear for a UI transition. Token names beyond the scheme come from the `motion-design` skill.
 - **Indeterminate waits of 200ms to 5s use `LoadingIndicator`.** Over 5s, a progress indicator. Under 200ms, nothing.
-- **No deprecated APIs** when a replacement exists: `rememberRipple()` (use `ripple()`), `calculateWindowSizeClass()` (use `currentWindowAdaptiveInfo()`), `onBackPressed()`, Accompanist system UI controller, `ClickableText`, and from `material3` 1.5.0 the `Slider(value, onValueChange)` overloads (use `SliderState`).
+- **No deprecated APIs** when a replacement exists: `rememberRipple()` (use `ripple()`), `calculateWindowSizeClass()` and `currentWindowAdaptiveInfo()` (use `currentWindowAdaptiveInfoV2()`), `onBackPressed()`, Accompanist system UI controller, `ClickableText`, and from `material3` 1.5.0 the `Slider(value, onValueChange)` overloads (use `Slider(state, onValueChange)` with a `SliderState`).
 - **I build custom.** When stock doesn't match the design, build the component. It still honors 48dp targets, semantics, ripple, theme tokens, and the motion scheme.
 - **Measure before optimizing.** Recomposition counts in Layout Inspector, release build, mid-tier hardware.

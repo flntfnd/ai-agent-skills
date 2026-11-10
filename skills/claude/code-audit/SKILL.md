@@ -147,7 +147,7 @@ cargo deny check
 1. **Format**: drift is minor.
 2. **Clippy with warnings denied**: `CARGO_BUILD_WARNINGS=deny` needs Cargo 1.97 or later. On older toolchains it's `cargo clippy --all-targets --all-features -- -D warnings`. Report each lint.
 3. **Tests**: `cargo test --all-features` where the project doesn't use nextest. A failing test is critical. `#[ignore]` without a documented reason is a warning.
-4. **`cargo audit`**: a vulnerability advisory is critical. Unmaintained and yanked notices are warnings.
+4. **`cargo audit`**: a vulnerability advisory is critical. Unmaintained and yanked notices are warnings. It reads the lockfile, not the build. If `cargo tree -i <crate>` shows the flagged crate is never compiled, it's a minor, and the fix is an `ignore` entry with the reason.
 5. **`cargo deny check`**: advisories, bans, licenses, and sources. No `deny.toml` on anything past a prototype is a warning.
 6. **`--locked`**: `Cargo.lock` not committed is a warning.
 7. **Suppressed lints**: `#[allow(...)]` without an explanation, `dead_code` in particular

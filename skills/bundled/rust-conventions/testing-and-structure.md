@@ -77,8 +77,8 @@ cargo deny check
 
 - **Clippy with warnings denied.** `CARGO_BUILD_WARNINGS=deny` on Cargo 1.97 or later; `cargo clippy --all-targets --all-features -- -D warnings` on older toolchains. Don't set `-D warnings` through `RUSTFLAGS`. It invalidates the build cache.
 - **`--locked`**, with `Cargo.lock` committed. Compromised releases of popular crates have sat on crates.io for over an hour before being pulled. The lockfile is what keeps a CI run from picking one up.
-- **`cargo audit`** checks `Cargo.lock` against the RustSec advisory database. A vulnerability advisory is critical and blocks merge. Unmaintained and yanked notices are warnings: replace the crate, or record an `ignore` entry with the advisory id and a written reason.
-- **`cargo deny check`** runs the advisories, bans, licenses, and sources checks against `deny.toml`. Required on anything past a prototype.
+- **`cargo audit`** checks `Cargo.lock` against the RustSec advisory database. A vulnerability advisory is critical and blocks merge. Unmaintained and yanked notices are warnings: replace the crate, or record an `ignore` entry with the advisory id and a written reason. It reads the lockfile, not the build, and the lockfile lists optional dependencies that never compile (sqlx's other database drivers, for one). If `cargo tree -i <crate>` prints nothing, the crate isn't built. Ignore that advisory in `.cargo/audit.toml` and say so in the comment.
+- **`cargo deny check`** runs the advisories, bans, licenses, and sources checks against `deny.toml`. Required on anything past a prototype. `cargo deny init` writes a file that allows no licenses, so every crate fails until you fill in the list. A working one is in [reference/testing-and-structure.md](testing-and-structure.md).
 - **Tests**: `cargo nextest run` is the default runner. `cargo test --all-features` is fine where a project doesn't use it.
 - rustfmt defaults. Don't customize without a written reason.
 
@@ -105,6 +105,7 @@ The manual review that goes with the gates.
 
 - [Manifest, lints, profiles](#manifest-lints-profiles)
 - [Toolchain pin](#toolchain-pin)
+- [deny.toml and audit.toml](#denytoml-and-audittoml)
 - [Layout: single crate](#layout-single-crate)
 - [Workspace](#workspace)
 - [What to test](#what-to-test)
@@ -118,6 +119,7 @@ name = "my-app"
 version = "0.1.0"
 edition = "2024"
 rust-version = "1.xx"     # same minor as rust-toolchain.toml
+publish = false           # an application, never a crates.io package
 
 [lints.rust]
 unsafe_op_in_unsafe_fn = "deny"
@@ -139,7 +141,7 @@ debug = "line-tables-only"
 opt-level = 3             # keeps heavy dev-deps (image, crypto, DB drivers) tolerable
 ```
 
-- Put a `clippy.toml` beside it with `allow-unwrap-in-tests = true`, so tests keep their `unwrap()`.
+- Put a `clippy.toml` beside it with `allow-unwrap-in-tests = true`, so tests keep their `unwrap()`. It covers `#[test]` functions and `#[cfg(test)]` modules. Helper functions in `tests/*.rs` aren't either, so those files start with `#![allow(clippy::unwrap_used)]`.
 - `rust-version`: for an application, the pinned toolchain's minor, bumped together with it. For a published library, the oldest compiler CI actually tests. Resolver 3 (the default under edition 2024) prefers dependency versions whose own `rust-version` fits, so the value changes what gets resolved. Current sqlx and parking_lot need a far newer compiler than edition 2024 itself does. MSRVs are in the snapshot.
 - Libraries add `missing_docs = "warn"` under `[lints.rust]`.
 - Migrating an older crate: `cargo fix --edition`, commit, then `cargo fix --edition-idioms` as a separate commit.
@@ -155,6 +157,41 @@ components = ["rustfmt", "clippy", "rust-src"]
 
 The current stable is in the snapshot in [crate-selection.md](crate-selection.md). Never pin a bare `x.y.0` that has since had a point release. Recent point releases fixed a vtable miscompilation and wrong `bool` returns over FFI.
 
+### deny.toml and audit.toml
+
+```toml
+# deny.toml
+[advisories]
+ignore = []
+
+[licenses]
+allow = ["MIT", "Apache-2.0", "BSD-3-Clause", "ISC", "Unicode-3.0", "Zlib", "BSD-1-Clause", "CDLA-Permissive-2.0"]
+
+[licenses.private]
+ignore = true                # workspace crates with publish = false need no license field
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+allow-wildcard-paths = true  # path dependencies between private workspace crates
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+```
+
+That allow list is what the default stack in this skill pulls in. Add a license when a new dependency needs one and you've read it. Don't allow them all up front.
+
+```toml
+# .cargo/audit.toml
+[advisories]
+# <crate> is in Cargo.lock through an optional dependency and isn't built:
+# `cargo tree -i <crate>` prints nothing.
+ignore = ["RUSTSEC-0000-0000"]
+```
+
+`cargo deny check advisories` works from the resolved dependency graph, so it doesn't flag crates that never compile. `cargo audit` reads the lockfile and does. Every ignore in either file carries its reason.
+
 ### Layout: single crate
 
 For services up to roughly 5k LoC:
@@ -166,6 +203,7 @@ my-service/
   rust-toolchain.toml
   clippy.toml
   deny.toml
+  .cargo/audit.toml       # only if an advisory is ignored
   .sqlx/                  # offline query metadata, committed
   migrations/
     20260416120000_initial.sql
@@ -204,6 +242,7 @@ resolver = "3"            # required: a virtual workspace has no root package to
 version = "0.1.0"
 edition = "2024"
 rust-version = "1.xx"
+publish = false
 
 [workspace.lints.rust]
 unsafe_op_in_unsafe_fn = "deny"
@@ -227,6 +266,7 @@ name = "my-db"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
+publish.workspace = true
 
 [lints]
 workspace = true
@@ -287,4 +327,4 @@ async fn user_can_be_created(pool: PgPool) -> anyhow::Result<()> {
 }
 ```
 
-`#[sqlx::test]` creates a fresh database per test, runs migrations, passes the pool, and cleans up. It needs `DATABASE_URL` pointing at a Postgres where the test process can create databases. That means a local or CI container, not a hosted Supabase project.
+`#[sqlx::test]` creates a fresh database per test, runs `migrations/`, passes the pool, and cleans up. It needs sqlx's `macros` and `migrate` features. It needs `DATABASE_URL` pointing at a Postgres where the test process can create databases. That means a local or CI container, not a hosted Supabase project.

@@ -192,7 +192,7 @@ val shift by animateDpAsState(if (pressed) hardOffset else 0.dp, Motion.Spring.s
 
 Box(
     Modifier
-        .offset(x = shift, y = shift)
+        .offset { IntOffset(shift.roundToPx(), shift.roundToPx()) }
         .dropShadow(
             shape = RectangleShape,
             shadow = Shadow(

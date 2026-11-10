@@ -124,7 +124,7 @@ SharedTransitionLayout {
                         rememberSharedContentState(key = "hero"),
                         animatedVisibilityScope = this@AnimatedContent
                     )
-                    .size(Size.thumbnail)
+                    .size(thumbnailSize)
                     .clickable { showDetail = true }
             )
         } else {
@@ -153,6 +153,7 @@ For gesture release with natural deceleration. Decay has no target. It starts at
 val decay = rememberSplineBasedDecay<Float>()
 val offset = remember { Animatable(0f) }
 
+// In the drag-end callback, not in composition
 scope.launch {
     offset.animateDecay(initialVelocity = velocity, animationSpec = decay)
 }

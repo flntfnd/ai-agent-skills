@@ -27,7 +27,7 @@ dependencies {
     implementation("androidx.compose.material3.adaptive:adaptive")
     implementation("androidx.compose.material3.adaptive:adaptive-layout")
     implementation("androidx.compose.material3.adaptive:adaptive-navigation")
-    implementation("androidx.activity:activity-compose")
+    implementation("androidx.activity:activity-compose:<activity version from Version Snapshot>")   // not in the Compose BOM
 }
 ```
 

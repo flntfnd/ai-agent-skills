@@ -51,7 +51,7 @@ Every `.await` is a cancellation point. If the future is dropped (a timeout, `se
 
 ```rust
 async fn process(file: &File) -> Result<Output> {
-    let _guard = scopeguard::guard(file, |f| cleanup_sync(f)); // runs on completion and on cancellation
+    let _guard = scopeguard::guard(file, cleanup_sync); // runs on completion and on cancellation
     let data = read_async(file).await?;
     transform(&data).await
 }
@@ -89,11 +89,8 @@ Sync work longer than a few tens of microseconds stalls every task queued on tha
 Spawn, await in scope, handle results.
 
 ```rust
-let (user, orders, prefs) = tokio::try_join!(
-    fetch_user(id),
-    fetch_orders(id),
-    fetch_preferences(id),
-)?;
+let (user, orders, prefs) =
+    tokio::try_join!(fetch_user(id), fetch_orders(id), fetch_preferences(id))?;
 ```
 
 `try_join!` runs the futures concurrently on one task and returns on the first error, dropping the rest. For a dynamic number of tasks use `JoinSet`, which aborts its tasks when dropped:

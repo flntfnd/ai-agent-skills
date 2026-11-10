@@ -50,7 +50,7 @@ if meter_tx.push(peak).is_err() {
 
 // UI thread:
 while let Ok(peak) = meter_rx.pop() {
-    // draw
+    draw_meter(peak);
 }
 ```
 
@@ -73,7 +73,7 @@ while let Ok(peak) = meter_rx.pop() {
 `assert_no_alloc` installs a global allocator that aborts if anything allocates or frees inside a guarded scope.
 
 ```rust
-use assert_no_alloc::{assert_no_alloc, AllocDisabler};
+use assert_no_alloc::{AllocDisabler, assert_no_alloc};
 
 #[cfg(debug_assertions)]
 #[global_allocator]

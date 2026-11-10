@@ -43,7 +43,11 @@ axum is the web framework: Tokio team, Tower middleware, plain async functions a
 ```rust
 use std::{net::Ipv6Addr, sync::Arc};
 
-use axum::{Json, Router, extract::{Path, State}, routing::get};
+use axum::{
+    Json, Router,
+    extract::{Path, State},
+    routing::get,
+};
 use tokio::signal::unix::{SignalKind, signal};
 
 struct AppState {
@@ -73,7 +77,10 @@ async fn main() -> anyhow::Result<()> {
         .with_state(state);
 
     // The platform assigns PORT. `::` accepts IPv6 and, on Linux, IPv4 as well.
-    let port: u16 = std::env::var("PORT").ok().and_then(|p| p.parse().ok()).unwrap_or(3000);
+    let port: u16 = std::env::var("PORT")
+        .ok()
+        .and_then(|p| p.parse().ok())
+        .unwrap_or(3000);
     let listener = tokio::net::TcpListener::bind((Ipv6Addr::UNSPECIFIED, port)).await?;
 
     // Containers are stopped with SIGTERM; Ctrl-C is for local runs.
@@ -103,7 +110,11 @@ async fn main() -> anyhow::Result<()> {
 ## Errors as IntoResponse
 
 ```rust
-use axum::{Json, http::StatusCode, response::{IntoResponse, Response}};
+use axum::{
+    Json,
+    http::StatusCode,
+    response::{IntoResponse, Response},
+};
 use serde_json::json;
 
 #[derive(Debug, thiserror::Error)]
@@ -145,13 +156,9 @@ Log errors at the response boundary, not inside business logic. Business logic r
 sqlx is compile-time-checked SQL, not an ORM. You write SQL and the macros validate it against the schema at build time.
 
 ```rust
-let user = sqlx::query_as!(
-    User,
-    "SELECT id, display_name FROM users WHERE id = $1",
-    id
-)
-.fetch_one(&pool)
-.await?;
+let user = sqlx::query_as!(User, "SELECT id, display_name FROM users WHERE id = $1", id)
+    .fetch_one(&pool)
+    .await?;
 ```
 
 - Compile-time checking (the `macros` feature) needs `DATABASE_URL` at build time, or `cargo sqlx prepare` to generate offline metadata (`.sqlx/`, committed, so CI builds without a database). `cargo sqlx prepare --check` in CI catches stale metadata.
@@ -230,8 +237,6 @@ use jsonwebtoken::{Algorithm, DecodingKey, Validation, decode, decode_header, jw
 #[derive(Debug, serde::Deserialize)]
 struct Claims {
     sub: uuid::Uuid,
-    role: String,
-    exp: u64,
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -250,7 +255,7 @@ fn verify(token: &str, jwks: &JwkSet, issuer: &str) -> Result<Claims, AuthError>
 
     // The algorithm is fixed here, never taken from the token's header.
     let mut validation = Validation::new(Algorithm::ES256);
-    validation.set_issuer(&[issuer]);              // https://<project-ref>.supabase.co/auth/v1
+    validation.set_issuer(&[issuer]); // https://<project-ref>.supabase.co/auth/v1
     validation.set_audience(&["authenticated"]);
 
     let data = decode::<Claims>(token, &DecodingKey::from_jwk(jwk)?, &validation)?;
@@ -258,7 +263,7 @@ fn verify(token: &str, jwks: &JwkSet, issuer: &str) -> Result<Claims, AuthError>
 }
 ```
 
-- `exp` is validated by default, with 60 seconds of leeway. Issuer and audience are validated because they're set. `aud` is `authenticated` for signed-in users.
+- `exp` is validated by default, with 60 seconds of leeway. Issuer and audience are validated because they're set. `aud` is `authenticated` for signed-in users. The library checks all three against the token itself, so `Claims` only declares the fields the code reads. An unread field is a dead-code warning, and the clippy gate fails on it.
 - Fetch the JWKS with `reqwest` at startup and hold it in an `ArcSwap<JwkSet>` or a `watch` channel. Refresh on a timer of about ten minutes (Supabase's edge caches the endpoint for that long) and once more, rate-limited, when a token arrives with an unknown `kid`. That's what a key rotation looks like. Don't fetch per request.
 - A valid token proves who the caller is. It doesn't authorize anything. The service connects to Postgres with RLS bypassed, so every query filters by `claims.sub` (or checks membership) explicitly.
 - This path gets explicit tests: valid, expired, wrong issuer, wrong audience, tampered signature, unknown `kid`.

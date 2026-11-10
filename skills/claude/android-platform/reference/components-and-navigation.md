@@ -203,11 +203,11 @@ Decide layout from the window, never from device type or orientation. The same a
 | Extra-large | 1600dp and up | up to 3 | Rail, collapsed or expanded |
 
 ```kotlin
-val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+val windowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass
 val twoPane = windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)
 ```
 
-`WindowSizeClass` is `androidx.window.core.layout.WindowSizeClass`. Compare against lower bounds so new breakpoints never break a `when`. Pass `supportLargeAndXLargeWidth = true` to get the two largest classes.
+`WindowSizeClass` is `androidx.window.core.layout.WindowSizeClass`. Compare against lower bounds so new breakpoints never break a `when`. `currentWindowAdaptiveInfoV2()` reports all five width classes. The unsuffixed `currentWindowAdaptiveInfo()` is deprecated.
 
 ### Navigation that adapts
 
