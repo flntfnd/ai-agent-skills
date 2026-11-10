@@ -1,0 +1,141 @@
+# Workflows and Handoff
+
+## Contents
+- [File Structure](#file-structure)
+- [Building a Design System from Scratch](#building-a-design-system-from-scratch)
+- [Replicating an Existing App](#replicating-an-existing-app)
+- [Dev Handoff](#dev-handoff)
+- [Accessibility](#accessibility)
+- [Anti-Patterns](#anti-patterns)
+
+## File Structure
+
+One file per system, organized by pages. Separate files only when the system is multi-brand at enterprise scale.
+
+```
+Page: 🎨 Tokens          -- all variable collections documented visually
+Page: 🔤 Typography       -- type scale, specimens, usage examples
+Page: 🎛 Components       -- all components, organized by category
+Page: 📐 Patterns         -- composed layouts, navigation patterns
+Page: 📱 iOS / iPadOS     -- platform screens
+Page: 🤖 Android          -- platform screens
+Page: 🌐 Web              -- platform screens
+Page: 🚢 Handoff          -- engineering-ready specs
+Page: 🗄 Archive          -- deprecated components (don't delete, archive)
+```
+
+Only create platform pages for platforms the project targets. A platform page that exists has content.
+
+Keep components and tokens in the same file. Over-splitting into libraries creates maintenance overhead that kills adoption.
+
+This structure is for a file I'm creating. In an existing file, work inside its structure. Don't add, rename, or reorder pages to match this list unless asked.
+
+## Building a Design System from Scratch
+
+Build in this order. A step is done when the content exists in Figma, not when the page has been created.
+
+**1. Extract brand values.** Before opening Figma: primary color, neutral palette, brand typeface, voice and tone. If an app already exists, read its platform skill (`apple-platform`, `android-platform`, `web-platform`) and the codebase, and use the existing token names exactly.
+
+**2. Build primitive tokens.** Color ramps, spacing scale, radius scale, shadow values. The 🎨 Tokens page isn't done until they're visible in Figma. No components until this is complete.
+
+**3. Build semantic tokens.** Semantic Color collection with Light and Dark modes. Every token aliases a primitive. Names and code syntax per [token-architecture.md](token-architecture.md).
+
+**4. Define typography.** Typography collection, text styles referencing it. The Typography page shows every text style rendered, not just variable names.
+
+**5. Define spacing and radius.** Number variables, documented visually on the Tokens page.
+
+**6. Build atoms, interactive on creation.** The atom list and the state list are in [component-architecture.md](component-architecture.md#component-inventory-and-states). Every atom gets all states, semantic token bindings, and prototype connections.
+
+**7. Build molecules, interactive on creation.** Assembled from atoms. Same bar.
+
+**8. Build page patterns.** Navigation shells, screen templates, common layout patterns.
+
+**9. Build screens.** Screens use instances of patterns, which use instances of molecules, which use instances of atoms. Nothing is drawn freehand on a screen. Every targeted platform gets the minimum screen set in [gates.md](gates.md), every screen in light and dark. On Apple platforms, system chrome comes from Apple's kit. See [liquid-glass.md](liquid-glass.md).
+
+## Replicating an Existing App
+
+For when the product exists in code and the design files are missing, outdated, or never existed. Extract the implicit design system from the live product and formalize it. Never skip the audit.
+
+**Step 1: Audit the product.** Capture every unique screen state: default, empty, error, loading, full, partial, edge cases. Put the captures on a Figma page, grouped by feature area, not screen type. If the codebase is available, audit it too. The tokens, theme files, and component props in code are the implicit system written down, and they beat an eyedropper.
+
+**Step 2: Extract the implicit system.**
+- **Colors**: sample every unique color. Used once is noise. Used 3-5 times is probably a semantic role. Used everywhere is definitely one.
+- **Spacing**: measure gaps and padding on recurring patterns.
+- **Typography**: list every unique font size and weight. Most products have 8-12 distinct type styles, documented or not.
+- **Radius**: measure corner radii on cards, buttons, inputs. Usually 4-6 consistent values.
+- **Elevation/shadows**: catalog every unique shadow.
+
+**Step 3: Formalize the system.** Map the findings to tokens, named by meaning, not appearance. Where the codebase already names a token, match it exactly. Build primitives, then semantic tokens aliasing them. Populate the 🎨 Tokens page completely before starting components.
+
+**Step 4: Build components against the tokens.** Recreate every component found, correctly this time: Auto Layout, variable bindings, all states, prototype connections. Atoms first. Don't touch screens until atoms are done.
+
+**Step 5: Rebuild screens.** Same bar as step 9 above. Every hardcoded value found here means a token is missing.
+
+**Tools for capture and audit:**
+- **Web apps.** The MCP server's `generate_figma_design` turns a live page into editable layers. The `figma-generate-design` skill builds a screen from code using the file's own components. Either one is a capture to audit, not a finished screen. Step 4 still applies. The `html.to.design` plugin does the same by hand.
+- **Native apps.** Screenshots through `upload_assets`, plus the codebase. `figma-swiftui` pushes SwiftUI views into Figma.
+- **Check designs** and the **Design System Auditor** plugin find where finished frames aren't using the system.
+
+## Dev Handoff
+
+**Before handing off: zero hardcoded values.** Run Check designs on each page. It checks one page at a time and it's plan-gated ([platform-status.md](platform-status.md)). Without it, do the same sweep as a `use_figma` read: list every fill, stroke, text property, radius, padding, and gap with no bound variable or style, and every detached instance. The requirement is the result, not the tool. Every component is a library instance. Every text layer references a text style. Every color and spacing value references a variable. Every variable has code syntax for each target platform.
+
+**Handoff page structure.** Separate from the design page, so engineers never scroll through iterations:
+```
+Section: Navigation flows (annotated with transition types and triggers)
+Section: Screen specs (key screens, annotated)
+Section: Component specs (edge cases, interaction notes)
+Section: Token reference (which collection to use for which platform)
+```
+
+Specs that aren't visible in the layers (focus order, accessibility labels, motion, overflow behavior) go on the frame as Dev Mode annotations, not loose text beside it. Motion specs use the token names from `motion-design`. Mark finished sections Ready for dev.
+
+**Layer naming.** Layer names become property names in Dev Mode. Name layers as if naming code.
+```
+Good: button-label, card-thumbnail, nav-tab-home, icon-leading
+Bad: Rectangle 47, Group 3, Frame copy
+```
+iOS: Swift camelCase. Android: Kotlin camelCase. Web: kebab-case.
+
+**Code Connect.** Once components are mapped, Dev Mode and the MCP server return the real component from the codebase, not a generated approximation. Two ways to map, and they stack:
+- **Template files through the CLI** (`.figma.ts`), checked in next to the component. The only path that gives real snippets in Inspect. Use it for the core component set.
+- **Code Connect UI** inside Dev Mode. Fast, and enough for the MCP server to route to the right component. Inspect shows only a file and component name.
+
+Parser-based Code Connect files (`*.figma.tsx` and similar) are unmaintained. Migrate them. Don't extend them. The `figma-code-connect` skill has the mechanics.
+
+**MCP integration.** For the coding agent to read the system and not guess: components and variables are published to a library, layer and variable names match code, and variables carry code syntax. When implementing, load `figma-design-to-code` (plus `figma-swiftui` for Apple platforms), read the library first, and build with what exists. What the server returns is a reference to adapt to the project's components and tokens. It isn't final code.
+
+## Accessibility
+
+Contrast minimums (WCAG AA):
+- Normal text: 4.5:1
+- Large text (18pt+ regular, 14pt+ bold): 3:1
+- Interactive elements against adjacent colors: 3:1
+
+Check contrast during design, not at handoff, and in both modes. A pair that passes in light routinely fails in dark. Check designs flags failures where the plan has it. The **Stark** plugin covers the rest. Measured ratios for the palette are in `color-system`.
+
+Build for Dynamic Type and large text. Test layouts at 150% and 200% scale. If things break, the layout is wrong, not the text size.
+
+Color can't be the only way information is conveyed. Every status indicator gets an icon or text label alongside color.
+
+Touch targets: 44pt minimum on iOS, 48dp on Android. If a component looks smaller, pad the tappable area without changing the visual size.
+
+## Anti-Patterns
+
+**Components without Auto Layout.** They break when content changes. Always.
+
+**Hardcoded color values in components.** A hex value in a component is a token that doesn't exist yet. Create it.
+
+**Static color styles where a variable belongs.** A solid color is a variable. Styles are for composites built from variables.
+
+**A separate component for every minor variation.** Use variants, component properties, and slots. A library with 800 components that could be 80 is unmaintainable.
+
+**Designing screens first.** Screens built without a component library are a pile of one-offs, not a design system.
+
+**Skipping dark mode.** It's a first-class target, not a bonus.
+
+**Unnamed layers.** They make Dev Mode useless and code generation unreliable.
+
+**Reorganizing a file nobody asked to have reorganized.** A one-line fix doesn't license renaming pages, rebuilding tokens, or re-backgrounding someone's working file. Report what's off. Change what was asked.
+
+**Building the whole system before testing it.** Build the token layer, then two or three components, then one real screen. If the tokens break, fix them before building forty more components on top.

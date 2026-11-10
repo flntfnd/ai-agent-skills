@@ -1,0 +1,285 @@
+# GSAP & Smooth Scroll
+
+GSAP is my standard for complex timelines, pinned and scrubbed scroll experiences, and multi-element choreography CSS can't express. Simple scroll-linked reveals and progress bars don't need it. Those are CSS scroll-driven animations ([web-css-transitions.md](web-css-transitions.md#scroll-driven-animations)).
+
+## Status
+
+As of November 2026:
+
+- `gsap` 3.15.1 is `latest`. Everything here targets v3. A 4.0 beta exists on the `beta` dist-tag only. Not for production.
+- Every plugin (ScrollTrigger, SplitText, Flip, MorphSVG, ScrollSmoother, and the rest) ships in the public `gsap` package since 3.13. No license key, Club membership, or private registry. Delete any old `.npmrc` token or `gsap-trial` dependency.
+- Free for commercial use. One restriction: GSAP can't be used inside a no-code visual animation builder that competes with Webflow, which owns it.
+- `@gsap/react` 2.1.2 provides `useGSAP()`. `lenis` is 1.3.27. The `@studio-freight/*` packages are deprecated.
+
+## Contents
+
+- [Setup](#setup)
+- [Timeline Choreography](#timeline-choreography)
+- [ScrollTrigger](#scrolltrigger)
+- [SplitText for Kinetic Typography](#splittext-for-kinetic-typography)
+- [FLIP Animations](#flip-animations)
+- [Cleanup](#cleanup)
+- [Reduced Motion](#reduced-motion)
+- [Lenis (Smooth Scrolling)](#lenis-smooth-scrolling)
+
+## Setup
+
+```javascript
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
+import { Flip } from "gsap/Flip";
+import { CustomEase } from "gsap/CustomEase";
+
+gsap.registerPlugin(ScrollTrigger, SplitText, Flip, CustomEase);
+
+// The easing tokens as named GSAP eases, so a GSAP tween and a CSS
+// transition on the same token run the same curve.
+CustomEase.create("enter", "0, 0, 0.2, 1");
+CustomEase.create("exit", "0.4, 0, 1, 1");
+CustomEase.create("standard", "0.4, 0, 0.2, 1");
+CustomEase.create("emphasized", "0.2, 0, 0, 1");
+CustomEase.create("expo-out", "0.16, 1, 0.3, 1");
+CustomEase.create("sine-in-out", "0.45, 0.05, 0.55, 0.95");
+
+// Duration tokens, in seconds
+const DURATION = { micro: 0.083, fast: 0.15, standard: 0.25, slow: 0.35, cinematic: 0.6 };
+```
+
+Tween durations come from `DURATION`. Position offsets and staggers inside a timeline are the choreography itself and stay literal. `"none"` is GSAP's linear ease, for scrubbed timelines only.
+
+## Timeline Choreography
+
+```javascript
+const tl = gsap.timeline({ defaults: { ease: "expo-out", duration: DURATION.cinematic } });
+
+tl.from(".hero-title", { y: 40, autoAlpha: 0 })
+  .from(".hero-subtitle", { y: 24, autoAlpha: 0 }, "-=0.4")      // overlap the previous tween by 0.4s
+  .from(".hero-cta", { y: 16, autoAlpha: 0, duration: DURATION.slow }, "-=0.3")
+  .from(".hero-image", { scale: 0.92, autoAlpha: 0, ease: "sine-in-out" }, 0.1)   // absolute: 0.1s in
+  .addLabel("reveal")
+  .from(".card", { y: 32, autoAlpha: 0, stagger: 0.06 }, "reveal")
+  .from(".tag", { scale: 0, autoAlpha: 0, stagger: 0.04 }, "reveal+=0.2");
+```
+
+`autoAlpha` animates opacity and sets `visibility: hidden` at 0. Hide the elements in CSS with `visibility: hidden` so nothing flashes before the script runs.
+
+## ScrollTrigger
+
+```javascript
+// Triggered: plays when the section scrolls into view
+gsap.from(".section-content", {
+    scrollTrigger: {
+        trigger: ".section",
+        start: "top 75%",                         // trigger's top hits 75% down the viewport
+        toggleActions: "play none none reverse"   // onEnter, onLeave, onEnterBack, onLeaveBack
+    },
+    y: 40,
+    autoAlpha: 0,
+    duration: DURATION.cinematic,
+    ease: "expo-out"
+});
+
+// Scrubbed and pinned: timeline progress follows scroll position
+const scrubbed = gsap.timeline({
+    defaults: { ease: "none" },   // scroll is the clock; don't ease against it
+    scrollTrigger: {
+        trigger: ".pinned-section",
+        start: "top top",
+        end: "+=2000",            // pin for 2000px of scrolling
+        pin: true,
+        scrub: 1,                 // take 1s to catch up to the scroll position
+        anticipatePin: 1
+    }
+});
+scrubbed
+    .to(".text", { autoAlpha: 0, y: -40, duration: 0.3 })
+    .to(".background", { scale: 1.2, duration: 1 }, 0);
+```
+
+In a scrubbed timeline, durations are proportions of the scroll distance, not seconds, so they aren't duration tokens.
+
+Call `ScrollTrigger.refresh()` after anything changes page height once triggers exist (images without dimensions, font swaps, injected content). Stale start and end positions are the most common ScrollTrigger bug.
+
+## SplitText for Kinetic Typography
+
+Create instances with `SplitText.create()`, let `autoSplit` handle font loading and resize, and build the animation inside `onSplit` so it's rebuilt against the new elements whenever the text re-splits.
+
+```javascript
+// Line-by-line masked reveal
+SplitText.create(".body-copy", {
+    type: "lines",
+    mask: "lines",       // wraps each line in a clipping element
+    autoSplit: true,     // re-split when fonts load or the width changes
+    onSplit(self) {
+        // Returning the animation lets SplitText revert it and carry
+        // progress across re-splits.
+        return gsap.from(self.lines, {
+            yPercent: 100,
+            stagger: 0.08,
+            duration: DURATION.cinematic,
+            ease: "expo-out",
+            scrollTrigger: { trigger: ".body-copy", start: "top 80%" }
+        });
+    }
+});
+
+// Character-by-character reveal
+SplitText.create(".headline", {
+    type: "words, chars",
+    autoSplit: true,
+    onSplit(self) {
+        return gsap.from(self.chars, {
+            autoAlpha: 0,
+            y: 20,
+            rotationX: -90,
+            transformOrigin: "0% 50% -50px",
+            stagger: 0.025,
+            duration: DURATION.cinematic,
+            ease: "expo-out"
+        });
+    }
+});
+```
+
+Split only what you animate. Every char is a DOM node. Without `autoSplit`, wait for `document.fonts.ready` first or the line breaks will be wrong. Leave the default `aria: "auto"` on. It labels the element with the full text and hides the fragments from screen readers.
+
+## FLIP Animations
+
+FLIP (First, Last, Invert, Play) animates a layout change by measuring before and after and animating a transform between them: reordering, reparenting, and size changes without animating `width`, `height`, or position.
+
+```javascript
+const state = Flip.getState(".card, .container");   // record
+
+container.appendChild(card);                         // change the DOM
+card.classList.toggle("expanded");
+
+Flip.from(state, {                                   // animate from the recorded state
+    duration: DURATION.slow,
+    ease: "emphasized",
+    stagger: 0.05,
+    absolute: true,    // position absolutely during the flip to avoid reflow jitter
+    onEnter: (elements) => gsap.fromTo(elements, { autoAlpha: 0, scale: 0.8 }, { autoAlpha: 1, scale: 1 }),
+    onLeave: (elements) => gsap.to(elements, { autoAlpha: 0, scale: 0.8 })
+});
+```
+
+For a single shared element between two views, a same-document View Transition does this natively. Use Flip for staggering, nested elements, or interruption control.
+
+## Cleanup
+
+Revert every tween, timeline, ScrollTrigger, and SplitText created for a view when the view goes away. Leaked ScrollTriggers keep measuring and firing against detached DOM. It's the most common GSAP production failure in SPAs.
+
+In React, `useGSAP()` scopes selector text to a container and reverts everything created inside it on unmount.
+
+```jsx
+import { useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(useGSAP);
+
+function Hero() {
+    const container = useRef(null);
+
+    const { contextSafe } = useGSAP(() => {
+        gsap.from(".hero-title", { y: 40, autoAlpha: 0, duration: DURATION.cinematic, ease: "expo-out" });
+    }, { scope: container });
+
+    // Animations created later (event handlers) must be wrapped so they
+    // are tracked and reverted too.
+    const onClick = contextSafe(() => {
+        gsap.to(".hero-cta", { scale: 1.05, duration: DURATION.fast, ease: "enter" });
+    });
+
+    return (
+        <section ref={container}>
+            <h1 className="hero-title">Title</h1>
+            <button className="hero-cta" onClick={onClick}>Start</button>
+        </section>
+    );
+}
+```
+
+Pass `{ dependencies: [value], revertOnUpdate: true }` when the animation has to be rebuilt as props change.
+
+Everywhere else, `gsap.context()` collects what is created inside it and `revert()` undoes all of it, ScrollTriggers and SplitText included:
+
+```javascript
+let ctx;
+
+function mount(root) {
+    ctx = gsap.context(() => {
+        gsap.from(".element", { y: 24, autoAlpha: 0, duration: DURATION.slow, ease: "expo-out" });
+        ScrollTrigger.create({ trigger: ".section", start: "top center" });
+    }, root);
+}
+
+function unmount() {
+    ctx?.revert();
+}
+```
+
+## Reduced Motion
+
+GSAP doesn't read `prefers-reduced-motion`. `gsap.matchMedia()` runs setup per media condition and reverts and re-runs it when the condition changes, so it doubles as cleanup.
+
+```javascript
+const mm = gsap.matchMedia();
+
+mm.add(
+    {
+        reduceMotion: "(prefers-reduced-motion: reduce)",
+        fullMotion: "(prefers-reduced-motion: no-preference)"
+    },
+    (context) => {
+        if (context.conditions.reduceMotion) {
+            // Same information, no travel: the fade from the reduced-motion policy
+            gsap.from(".section-content", { autoAlpha: 0, duration: DURATION.fast, ease: "enter" });
+            return;
+        }
+
+        gsap.from(".section-content", {
+            y: 40,
+            autoAlpha: 0,
+            duration: DURATION.cinematic,
+            ease: "expo-out",
+            scrollTrigger: { trigger: ".section", start: "top 75%" }
+        });
+    }
+);
+
+// mm.revert() tears down everything created in every condition.
+```
+
+Pinned, scrubbed sequences have no reduced equivalent. Skip them and lay the content out statically.
+
+## Lenis (Smooth Scrolling)
+
+Lenis smooths wheel input while keeping the browser's native scroll underneath, so `position: sticky`, anchor links, and assistive technology keep working. Use it only when the design calls for a smoothed scroll feel.
+
+```javascript
+import Lenis from "lenis";
+import "lenis/dist/lenis.css";   // required styles
+
+const lenis = new Lenis({
+    anchors: true   // smooth in-page anchor links
+});
+
+// One clock: GSAP's ticker drives Lenis, so ScrollTrigger and Lenis
+// update in the same frame.
+lenis.on("scroll", ScrollTrigger.update);
+gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);   // ticker time is seconds, Lenis wants milliseconds
+});
+gsap.ticker.lagSmoothing(0);
+```
+
+- **One loop only.** Without GSAP, `new Lenis({ autoRaf: true })` runs its own loop. A second loop calling `lenis.raf()` makes scrolling stutter. With Three.js, call `lenis.raf()` from the render loop.
+- **Tuning.** Smoothing is `lerp` (default `0.1`; lower is heavier). `duration` and `easing` are an alternative model and are ignored while `lerp` is set.
+- **Leave touch alone.** `syncTouch` defaults to `false`. Native touch scrolling is already smooth and users notice when it's replaced.
+- **Reduced motion.** `respectReducedMotion` defaults to `true`. Smoothing stops and programmatic scrolls become instant, while scroll events keep firing so synced WebGL still works. Don't turn it off.
+- **Teardown.** `lenis.destroy()`.
+- **React.** `import { ReactLenis, useLenis } from "lenis/react"` and render `<ReactLenis root />` once near the top of the tree.
+
+ScrollSmoother is GSAP's own smooth-scroll plugin. It transforms a wrapper instead of smoothing native scroll. Use one or the other, never both. I use Lenis. ScrollSmoother is only for a design that depends on its `data-speed`/`data-lag` parallax attributes.

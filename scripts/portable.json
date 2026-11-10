@@ -1,0 +1,20 @@
+{
+  "replacements": [
+    ["CLAUDE.md", "AGENTS.md"],
+    ["figma:figma-", "figma-"]
+  ],
+  "skills": {
+    "figma-design-system": {
+      "description": "Process for building Figma design systems (iOS/iPadOS/macOS, Android, Web) on the official Figma MCP server, and the single definition of design token naming for the whole skill library. Covers the four hard gates checked every session (dark canvas first, no empty pages plus the minimum screen set, token names match the codebase exactly, light and dark both required), session start, three-tier tokens, the mechanical Figma-to-CSS/Swift/Kotlin name conversion, variable collections and modes, component inventory and states, Slots, Liquid Glass in Figma, applying a visual style, replicating a live app, and Dev Mode and Code Connect handoff. Use when starting, resuming, extending, or auditing a Figma design file, design system, component library, or screen set; creating Figma variables, tokens, or components; naming a design token on any platform; or preparing a Figma file for handoff. Does not cover MCP call syntax -- Figma's own agent skills own that.",
+      "compatibility": "Requires the Figma MCP server and Figma's own agent skills (figma-use and related)."
+    }
+  },
+  "agents": {
+    "replacements": [
+      ["My job is design, Claude's job is implementation.", "My job is design, the agent's job is implementation."],
+      ["No mention of Claude, AI, or code generation tools.", "No mention of Claude, Codex, AI, or code generation tools."],
+      ["lives as an Agent Skill in `~/.claude/skills/`", "lives as an Agent Skill in your agent's skills directory (`~/.codex/skills/`, `~/.agents/skills/`, or wherever it reads them)"],
+      ["name the ones you expect Claude to pull in", "name the ones you expect the agent to pull in"]
+    ]
+  }
+}
