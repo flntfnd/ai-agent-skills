@@ -1,7 +1,7 @@
 ---
 name: visual-styles
 description: Reference for 15 deliberate visual design languages applied as overrides of native platform defaults on iOS, iPadOS, macOS, Android, and Web -- Neo-Minimalism, Neo-Brutalism, Brutalism (Pure), Liquid Glass, Glassmorphism/Frosted glass, Neumorphism/Soft UI, Claymorphism, Kinetic Typography, Futuristic/Sci-Fi/HUD, Bento Grid, Editorial/Structural, Organic/Biomorphic, Texture/Tactile/grain, Retro Computing (Y2K, CRT, terminal, retro window chrome), and Calm/Anti-Distraction. Use when a UI, screen, mockup, component, or design system needs an explicit named style instead of the native look, when choosing between styles, or when checking that an implementation reads as its style. Each style has one reference file: visual signature, tokens, component rules, "wrong if" checklist, accessibility, and SwiftUI, Compose, and CSS code. Load only the chosen style's file.
-when_to_use: Trigger phrases: "make this neo-brutalist," "glassmorphism card," "bento grid layout," "retro CRT terminal look," "Y2K terminal," "claymorphism button," "soft UI," "kinetic type hero," "grainy paper texture," "calm distraction-free reader."
+when_to_use: Trigger phrases: "make this neo-brutalist," "glassmorphism card," "bento grid layout," "retro CRT terminal look," "Y2K terminal," "claymorphism button," "soft UI," "kinetic type hero," "oversized headline that reveals word by word," "grainy paper texture," "calm distraction-free reader."
 ---
 
 # Visual Styles
